@@ -1,0 +1,7 @@
+# workspace
+.idea/
+.vscode/
+.history/
+
+# cache
+.DS_Store
