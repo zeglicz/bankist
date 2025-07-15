@@ -81,3 +81,17 @@ const displayMovements = movements => {
 };
 
 displayMovements(account1.movements);
+
+const createUsernames = accs =>
+    accs.forEach(
+        acc =>
+            (acc.username = acc.owner
+                .toLowerCase()
+                .split(" ")
+                .map(acc => acc[0])
+                .join("")
+                .toUpperCase()),
+    );
+
+createUsernames(accounts);
+// console.log(accounts);
