@@ -89,14 +89,14 @@ const createUsernames = accs =>
                 .toLowerCase()
                 .split(" ")
                 .map(acc => acc[0])
-                .join("")
-                .toUpperCase()),
+                .join("")),
     );
 
 createUsernames(accounts);
-// console.log(accounts);
 
-const calcDisplaySummary = movements => {
+/* --- LOGIN IN --- */
+
+const calcDisplaySummary = ({ movements, interestRate }) => {
     const incomes = movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0);
     labelSumIn.textContent = `${incomes} €`;
 
@@ -105,10 +105,10 @@ const calcDisplaySummary = movements => {
 
     const interest = movements
         .filter(mov => mov > 0)
-        .map(deposit => (deposit * 1.2) / 100)
+        .map(deposit => (deposit * interestRate) / 100)
         .filter(int => int >= 1)
         .reduce((acc, int) => acc + int, 0);
-    labelSumInterest.textContent = `${interest} €`;
+    labelSumInterest.textContent = `${Math.trunc(interest * 100) / 100} €`;
 };
 
 const calcDisplayBalance = movements => {
@@ -116,5 +116,28 @@ const calcDisplayBalance = movements => {
     labelBalance.textContent = `${balance} €`;
 };
 
-calcDisplayBalance(account1.movements);
-calcDisplaySummary(account1.movements);
+let currentAccount;
+
+btnLogin.addEventListener("click", e => {
+    // Prevent form from submitting
+    e.preventDefault();
+
+    currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value);
+
+    if (currentAccount?.pin === Number(inputLoginPin.value)) {
+        labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(" ")[0]}`;
+
+        containerApp.style.opacity = 100;
+        inputLoginUsername.value = inputLoginPin.value = "";
+
+        inputLoginPin.blur();
+        inputLoginUsername.blur();
+
+        displayMovements(currentAccount.movements);
+        calcDisplayBalance(currentAccount.movements);
+        calcDisplaySummary(currentAccount);
+    } else {
+        containerApp.style.opacity = 0;
+        labelWelcome.textContent = "Log in to get started";
+    }
+});
