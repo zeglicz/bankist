@@ -95,3 +95,26 @@ const createUsernames = accs =>
 
 createUsernames(accounts);
 // console.log(accounts);
+
+const calcDisplaySummary = movements => {
+    const incomes = movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0);
+    labelSumIn.textContent = `${incomes} €`;
+
+    const outcomes = Math.abs(movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov, 0));
+    labelSumOut.textContent = `${outcomes} €`;
+
+    const interest = movements
+        .filter(mov => mov > 0)
+        .map(deposit => (deposit * 1.2) / 100)
+        .filter(int => int >= 1)
+        .reduce((acc, int) => acc + int, 0);
+    labelSumInterest.textContent = `${interest} €`;
+};
+
+const calcDisplayBalance = movements => {
+    const balance = movements.reduce((acc, mov) => acc + mov, 0);
+    labelBalance.textContent = `${balance} €`;
+};
+
+calcDisplayBalance(account1.movements);
+calcDisplaySummary(account1.movements);
