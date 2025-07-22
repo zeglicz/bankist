@@ -1,6 +1,6 @@
 "use strict";
 
-/*--- DATA ---*/
+// === DATA ===
 
 const account1 = {
     owner: "Jonas Schmedtmann",
@@ -58,7 +58,7 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
-/*--- DOM ELEMENTS ---*/
+// === DOM ELEMENTS ===
 
 const labelWelcome = document.querySelector(".welcome");
 const labelDate = document.querySelector(".date");
@@ -85,7 +85,7 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-/*--- APP ---*/
+// === APP UTILS / HELPERS ===
 
 const formatMovementDate = (date, locale) => {
     const calcDaysPassed = (date1, date2) => Math.round(Math.abs((date2 - date1) / (1000 * 60 * 60 * 24)));
@@ -96,10 +96,6 @@ const formatMovementDate = (date, locale) => {
     if (daysPassed === 1) return "Yesterday";
     if (daysPassed <= 7) return `${daysPassed} days ago`;
 
-    // return `${new String(date.getDate()).padStart(2, 0)}/${new String(date.getMonth() + 1).padStart(
-    //     2,
-    //     0,
-    // )}/${date.getFullYear()}`;
     return new Intl.DateTimeFormat(locale).format(date);
 };
 
@@ -119,7 +115,6 @@ const displayMovements = (acc, sort = false) => {
     }));
 
     sort ? combinedMovsDates.sort((a, b) => a.movement - b.movement) : combinedMovsDates;
-    // const movs = sort ? acc.movements.slice().sort((a, b) => a - b) : acc.movements;
 
     combinedMovsDates.forEach((mov, i) => {
         const { movement, movementDate } = mov;
@@ -142,8 +137,6 @@ const displayMovements = (acc, sort = false) => {
     });
 };
 
-displayMovements(account1);
-
 const createUsernames = accs =>
     accs.forEach(
         acc =>
@@ -156,7 +149,7 @@ const createUsernames = accs =>
 
 createUsernames(accounts);
 
-/* --- DISPLAY AND UPDATE BALANCE --- */
+// === DISPLAY & BALANCE MANAGEMENT ===
 
 const calcDisplaySummary = acc => {
     const incomes = acc.movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0);
@@ -205,18 +198,12 @@ const startLogOutTimer = () => {
     return timer;
 };
 
-/* --- LOGIN IN --- */
+// === EVENT LISTENERS ===
 
+// --- Login ---
 let currentAccount, timer;
 
-/* --- FAKE ALWAYS LOGGED IN --- */
-
-// currentAccount = account1;
-// updateBalances(currentAccount);
-// containerApp.style.opacity = 100;
-
 btnLogin.addEventListener("click", e => {
-    // Prevent form from submitting
     e.preventDefault();
 
     currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value);
@@ -227,7 +214,6 @@ btnLogin.addEventListener("click", e => {
         containerApp.style.opacity = 100;
         inputLoginUsername.value = inputLoginPin.value = "";
 
-        /* EXPERIMENTING API */
         const now = new Date();
         const options = {
             year: "numeric",
@@ -251,7 +237,7 @@ btnLogin.addEventListener("click", e => {
     }
 });
 
-/* --- TRANSFER MONEY --- */
+// --- Transfer Money ---
 
 btnTransfer.addEventListener("click", e => {
     e.preventDefault();
@@ -280,7 +266,8 @@ btnTransfer.addEventListener("click", e => {
     }
 });
 
-/* --- REQUEST LOAN */
+// --- Request Loan ---
+
 btnLoan.addEventListener("click", e => {
     e.preventDefault();
 
@@ -299,7 +286,7 @@ btnLoan.addEventListener("click", e => {
     }
 });
 
-/* --- CLOSE ACCOUNT */
+// --- Close Account ---
 
 btnClose.addEventListener("click", e => {
     e.preventDefault();
@@ -313,7 +300,7 @@ btnClose.addEventListener("click", e => {
     inputCloseUsername.value = inputClosePin = "";
 });
 
-/* SORT TRANSFERS */
+// --- Sort Transfers ---
 
 let sorted = false;
 btnSort.addEventListener("click", e => {
