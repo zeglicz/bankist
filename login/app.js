@@ -19,7 +19,7 @@ const account1 = {
         "2020-07-12T10:51:36.790Z",
     ],
     currency: "EUR",
-    locale: "pt-PT", // de-DE
+    locale: "pt-PT",
 };
 
 const account2 = {
@@ -87,6 +87,8 @@ const inputClosePin = document.querySelector(".form__input--pin");
 
 // === APP UTILS / HELPERS ===
 
+// --- formatMovementDate ---
+
 const formatMovementDate = (date, locale) => {
     const calcDaysPassed = (date1, date2) => Math.round(Math.abs((date2 - date1) / (1000 * 60 * 60 * 24)));
 
@@ -99,12 +101,16 @@ const formatMovementDate = (date, locale) => {
     return new Intl.DateTimeFormat(locale).format(date);
 };
 
+// --- formatCur ---
+
 const formatCur = (value, locale, currency) => {
     return new Intl.NumberFormat(locale, {
         style: "currency",
         currency: currency,
     }).format(value);
 };
+
+// --- displayMovements ---
 
 const displayMovements = (acc, sort = false) => {
     containerMovements.innerHTML = "";
@@ -137,6 +143,8 @@ const displayMovements = (acc, sort = false) => {
     });
 };
 
+// --- createUsernames ---
+
 const createUsernames = accs =>
     accs.forEach(
         acc =>
@@ -150,6 +158,8 @@ const createUsernames = accs =>
 createUsernames(accounts);
 
 // === DISPLAY & BALANCE MANAGEMENT ===
+
+// --- calcDisplaySummary ---
 
 const calcDisplaySummary = acc => {
     const incomes = acc.movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0);
@@ -166,16 +176,22 @@ const calcDisplaySummary = acc => {
     labelSumInterest.textContent = formatCur(interest, acc.locale, acc.currency);
 };
 
+// --- calcDisplayBalance ---
+
 const calcDisplayBalance = acc => {
     acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
     labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
 };
+
+// --- updateBalances ---
 
 const updateBalances = acc => {
     displayMovements(acc);
     calcDisplayBalance(acc);
     calcDisplaySummary(acc);
 };
+
+// --- startLogOutTimer ---
 
 const startLogOutTimer = () => {
     let time = 300;
@@ -201,6 +217,7 @@ const startLogOutTimer = () => {
 // === EVENT LISTENERS ===
 
 // --- Login ---
+
 let currentAccount, timer;
 
 btnLogin.addEventListener("click", e => {
